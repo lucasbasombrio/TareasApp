@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Button,
-  FlatList,
-} from "react-native";
+import React, { useContext, useEffect, useState } from 'react'
+import {StyleSheet, Text,TextInput, View, Button,FlatList} from "react-native";
+import { AuthContext } from '../context/AuthContext';
 
 export const HomeScreen = () => {
+
+  const { logout } = useContext(AuthContext)
+
   const [tarea, setTarea] = useState("");
   const [tareas, setTareas] = useState([]);
 
@@ -38,6 +35,9 @@ export const HomeScreen = () => {
           value={tarea}
           onChangeText={setTarea}
         />
+
+<Button title="Logout" onPress={ () => logout()} color="red" />
+
         <Button title="Agregar Tarea" onPress={agregarTarea} />
       </View>
     </View>

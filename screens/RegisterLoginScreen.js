@@ -1,85 +1,81 @@
-import React, { useState } from "react";
-import "react";
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  TextInput,
-  Switch,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useContext, useEffect, useState } from 'react';
+import { View,Text, Button,  StyleSheet,TextInput, Switch,} from "react-native";
+import { useNavigation, NavigationContainer} from "@react-navigation/native";
+import { AuthContext } from '../context/AuthContext';
 
 export default function RegisterLoginScreen() {
+
+  const {status, login, register} = useContext(AuthContext)
+
   const [esLogin, setEsLogin] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [nombre, setNombre] = useState("");
+  const [username, setUsername] = useState("");
 
   const navigation = useNavigation();
 
-  const HandleRegister = () => {
+  const handleSubmit = () => {
+    if(esLogin){
+      login(username, password)
+    }else{
+      register(username, email, password)
+    }
+  }
+  useEffect( () => {
+    if( status === 'authenticated'){
+      navigation.navigate('Home')
+    }
+  }, [status, navigation])
+
+/*   const HandleRegister = () => {
     if (email === "admin" && password === "admin") {
       alert(`${nombre} se ha registrado correctamente`);
       navigation.navigate("Home");
     } else {
       alert("Login Fallado");
     }
-  };
+  }; */
 
   const IrALogin = () => {
     setEsLogin(true);
   };
-
+ 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{esLogin ? "Login" : "Registrarse"}</Text>
+      <Text style={styles.title}>{ esLogin ? 'Login' : 'Registrarse'}</Text>
+      
       {
         !esLogin && (
             <TextInput 
         style={ styles.input}
-        placeholder='Ingrese su nombre'
-        value={nombre}
-        onChangeText={setNombre}
+        placeholder='Ingrese su Email'
+        value={email}
+        onChangeText={setEmail}
         />
         )
       }
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
+      <TextInput 
+        style={ styles.input}
+        placeholder='Ingrese su Username'
+        value={username}
+        onChangeText={setUsername}
       />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
+      <TextInput 
+        style={ styles.input}
+        placeholder='Ingrese su Password'
+        keyboardType='password'
         value={password}
         onChangeText={setPassword}
       />
-
-      <View style={styles.register}>
-        {esLogin ? (
-          <Button title="Iniciar Sesion" onPress={HandleRegister} />
-        ) : (
-          <>
-            <Button
-              title={esLogin ? "Login" : "Registrate"}
-              onPress={HandleRegister}
-            />
-            <Button title="Iniciar Sesion" onPress={IrALogin} />
-          </>
-        )}
-      </View>
-
-      <View>
-        {/* <Text>{esLogin ? 'Cambia a Registro' : 'Cambia a Login'}</Text> */}
-        {/* <Switch value={esLogin} onValueChange={setEsLogin}/> */}
-      </View>
+      <Button title={ esLogin ? 'Login' : 'Registrate'} onPress={handleSubmit}/>
+    <View>
+        <Text>{esLogin ? 'Cambia a Registro' : 'Cambia a Login'}</Text>
+        <Switch value={esLogin} onValueChange={setEsLogin}/>
+    </View>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
