@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import {StyleSheet, Text,TextInput, View, Button,FlatList} from "react-native";
 import { AuthContext, nombreUsuario } from '../context/AuthContext';
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
+/* import { TareasContext } from '../context/TareasContext'; */
 
 export const HomeScreen = () => {
 
   const navigation = useNavigation();
+  /* const {agregarTarea1} = useContext(TareasContext) */ 
 
   const { status, logout, nombreUsuario } = useContext(AuthContext)
   const [tarea, setTarea] = useState("");
