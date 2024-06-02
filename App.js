@@ -25,7 +25,6 @@ return (
    {status !== 'authenticated' ? (
         <>
           <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="SoloRegister" component={SoloRegister} />
         </>
       ) : (
