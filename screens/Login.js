@@ -40,7 +40,7 @@ export default function RegisterLoginScreen() {
 
 <View style={styles.container2}>
 <Image
-        source={require('../assets/logo.png')}
+        source={require('../assets/logo2.png')}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: -80,
+    marginTop: -115,
   },
   input: {
     backgroundColor: 'white',
