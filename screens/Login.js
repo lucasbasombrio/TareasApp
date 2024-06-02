@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
+import { ImageBackground, Image, View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext } from '../context/AuthContext';
 
 export default function RegisterLoginScreen() {
+
+  const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg');
 
   const {status, login, register} = useContext(AuthContext)
 
@@ -12,8 +14,6 @@ export default function RegisterLoginScreen() {
   const [username, setUsername] = useState("");
 
   const navigation = useNavigation();
-
-
   const handleSubmit = () => {
   
         const loginResult =  login(username, password);
@@ -23,7 +23,6 @@ export default function RegisterLoginScreen() {
     
 };
 
-
   useEffect( () => {
     if( status === 'authenticated'){
       navigation.navigate('Home')
@@ -31,44 +30,32 @@ export default function RegisterLoginScreen() {
   }, [status, navigation])
 
 
-
-/*   const HandleRegister = () => {
-    if (email === "admin" && password === "admin") {
-      alert(`${nombre} se ha registrado correctamente`);
-      navigation.navigate("Home");
-    } else {
-      alert("Login Fallado");
-    }
-  }; */
-
-
   const IrALogin = () => {
     setEsLogin(true);
   };
  
   return (
-    <View style={styles.container}>
-{/*       <Text style={styles.title}>{ esLogin ? 'Login' : 'Registrarse'}</Text> */}
-<Text style={styles.title}>Login</Text> 
-   {/*    {
-        !esLogin && (
-            <TextInput 
-        style={ styles.input}
-        placeholder='Ingrese su Email'
-        value={email}
-        onChangeText={setEmail}
-        />
-        )
-      } */}
+    <View style={styles.container1}>
+<ImageBackground source={image} resizeMode="cover" style={styles.image}>
 
-      <TextInput 
-        style={ styles.input}
-        placeholder='Ingrese su Username'
-        value={username}
-        onChangeText={setUsername}
+<View style={styles.container2}>
+<Image
+        source={require('../assets/logo2.png')}
+        style={styles.logo}
+        resizeMode="contain"
       />
+      </View>
+
+
+    <View style={styles.container}>
+<TextInput 
+    style={[styles.input, {backgroundColor: 'rgba(255, 255, 255, 0.50)'}]}
+    placeholder='Ingrese su Username'
+    value={username}
+    onChangeText={setUsername}
+/>
       <TextInput 
-        style={ styles.input}
+         style={[styles.input, {backgroundColor: 'rgba(255, 255, 255, 0.50)'}]}
         placeholder='Ingrese su Password'
         keyboardType='password'
         value={password}
@@ -90,36 +77,35 @@ export default function RegisterLoginScreen() {
       <View>
         <Button title='Crear cuenta' onPress={() => navigation.navigate('SoloRegister')} color="#28a745" />
       </View>
-
-     
-
-   {/*  <View>
-        <Text>{esLogin ? 'Cambia a Registro' : 'Cambia a Login'}</Text>
-        <Switch value={esLogin} onValueChange={setEsLogin}/>
-        </View> */}
-
     </View>
+
+    </ImageBackground>
+</View>
    
   );
 }
 
 
 const styles = StyleSheet.create({
+  container1: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
-    justifyContent: "center",
     padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    textAlign: "center",
+    marginTop: -115,
   },
   input: {
+    backgroundColor: 'white',
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
-    marginBottom: 20,
+    marginBottom: 8,
     paddingHorizontal: 10,
   },
   register: {
@@ -129,6 +115,16 @@ const styles = StyleSheet.create({
   },
   text1: {
     textAlign: "center",
-    color: "blue"
+    color: "white"
+  },
+  container2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 250, 
+    height: 250, 
+   
   }
 });

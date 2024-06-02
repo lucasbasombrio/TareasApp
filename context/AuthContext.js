@@ -6,14 +6,18 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
 
     const [status, setStatus] = useState('checking');
+    const [userId, setUserId] = useState();
    
 
     useEffect(() => {
         const cargarEstadoAuth = async () => {
             const isAuthenticated = await AsyncStorage.getItem('isAuthenticated')
+            /* await AsyncStorage.setItem('userId', user.id); */
 
             if(isAuthenticated === 'true'){  
                 setStatus('authenticated')
+                setUserId(storedUserId);
+                
             }else{
                 setStatus('unauthenticated')
             }
@@ -27,7 +31,6 @@ export const AuthProvider = ({ children }) => {
 const login = async (username, password) => {
 
         try {
-            
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
             const users = await respuesta.json()
             console.log('users: ', users);
@@ -37,28 +40,13 @@ const login = async (username, password) => {
             console.log('user: ', user);
             if (user){
                 await AsyncStorage.setItem('isAuthenticated', 'true')
+              /*   await AsyncStorage.setItem('userId', user.id); */
                 setStatus('authenticated')
+                setUserId(user.id);
             }else{
                 setStatus('unauthenticated')
             }
 
-        
-            const nombreUsuario = async (username, password) => {
-                try {
-                    const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
-                    const users = await respuesta.json();
-                    const user = users.find(element => element.username === username && element.password === password);
-                    if (user) {
-                        return user.username;
-                    } else {
-                        return null; 
-                    }
-                } catch (error) {
-                    console.error('Error en el fetch: ', error);
-                    return null
-                }
-            };
-            
         } catch (error) {
             console.error('Error en el fetch: ', error)
             alert('Error en login')
@@ -97,9 +85,6 @@ const login = async (username, password) => {
         setStatus('unauthenticated')
     }
    
-
-
-
  return (
     <AuthContext.Provider value={{ status, login, register, logout}}>
         { children }
