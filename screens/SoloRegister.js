@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View,Text, Button,  StyleSheet,TextInput, Switch,} from "react-native";
+import { View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext } from '../context/AuthContext';
 
-export default function RegisterLoginScreen() {
+export default function SoloRegister() {
 
   const {status, login, register} = useContext(AuthContext)
 
@@ -35,6 +35,7 @@ export default function RegisterLoginScreen() {
       alert("Login Fallado");
     }
   }; */
+
 
   const IrALogin = () => {
     setEsLogin(true);
@@ -68,11 +69,9 @@ export default function RegisterLoginScreen() {
         onChangeText={setPassword}
       />
       <Button title={ esLogin ? 'Login' : 'Registrate'} onPress={handleSubmit}/>
-    <View>
-        <Text>{esLogin ? 'Cambia a Registro' : 'Cambia a Login'}</Text>
-        <Switch value={esLogin} onValueChange={setEsLogin}/>
+
     </View>
-    </View>
+   
   );
 }
 
@@ -100,4 +99,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 5,
   },
+  text1: {
+    textAlign: "center",
+    color: "blue"
+  }
 });

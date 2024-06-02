@@ -1,13 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react'
 import {StyleSheet, Text,TextInput, View, Button,FlatList} from "react-native";
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext, nombreUsuario } from '../context/AuthContext';
+import { useNavigation, NavigationContainer} from "@react-navigation/native";
 
 export const HomeScreen = () => {
 
-  const { logout } = useContext(AuthContext)
+  const navigation = useNavigation();
 
+  const { status, logout, nombreUsuario } = useContext(AuthContext)
   const [tarea, setTarea] = useState("");
   const [tareas, setTareas] = useState([]);
+
+  const handleLogout = () => {
+  logout();
+  };
+
+  useEffect( () => {
+    if( status === 'unauthenticated'){
+      navigation.navigate('Login')
+    }
+  }, [status, navigation])
 
   const agregarTarea = () => {
     if (tarea.trim()) {
@@ -17,7 +29,9 @@ export const HomeScreen = () => {
   };
 
   return (
+
     <View style={styles.container}>
+      <Text></Text>
       <FlatList
         data={tareas}
         keyExtractor={(item) => item.id}
@@ -35,10 +49,15 @@ export const HomeScreen = () => {
           value={tarea}
           onChangeText={setTarea}
         />
+<Button title="Agregar Tarea" onPress={agregarTarea} />
+{/* Finalidad espaciadora */}
+<View style={{ height: 50 }} />
+<View style={styles.inputContainer}>
+</View>
 
-<Button title="Logout" onPress={ () => logout()} color="red" />
+<Button title="Logout" onPress={handleLogout} color="red" />
 
-        <Button title="Agregar Tarea" onPress={agregarTarea} />
+        
       </View>
     </View>
   );

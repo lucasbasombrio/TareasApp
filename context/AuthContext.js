@@ -6,6 +6,7 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
 
     const [status, setStatus] = useState('checking');
+   
 
     useEffect(() => {
         const cargarEstadoAuth = async () => {
@@ -22,8 +23,8 @@ export const AuthProvider = ({ children }) => {
         cargarEstadoAuth()
     }, [])
 
-
-    const login = async (username, password) => {
+    
+const login = async (username, password) => {
 
         try {
             
@@ -40,6 +41,23 @@ export const AuthProvider = ({ children }) => {
             }else{
                 setStatus('unauthenticated')
             }
+
+        
+            const nombreUsuario = async (username, password) => {
+                try {
+                    const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
+                    const users = await respuesta.json();
+                    const user = users.find(element => element.username === username && element.password === password);
+                    if (user) {
+                        return user.username;
+                    } else {
+                        return null; 
+                    }
+                } catch (error) {
+                    console.error('Error en el fetch: ', error);
+                    return null
+                }
+            };
             
         } catch (error) {
             console.error('Error en el fetch: ', error)
