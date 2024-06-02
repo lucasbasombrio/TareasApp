@@ -23,10 +23,11 @@ export default function RegisterLoginScreen() {
     
 };
 
+
   useEffect( () => {
     if( status === 'authenticated'){
       navigation.navigate('Home')
-    }
+    } 
   }, [status, navigation])
 
 
