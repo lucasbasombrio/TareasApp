@@ -4,28 +4,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
-
     const [status, setStatus] = useState('checking');
-    const [userId, setUserId] = useState();
-   
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
         const cargarEstadoAuth = async () => {
-            const isAuthenticated = await AsyncStorage.getItem('isAuthenticated')
-            /* await AsyncStorage.setItem('userId', user.id); */
+            const isAuthenticated = await AsyncStorage.getItem('isAuthenticated');
 
-            if(isAuthenticated === 'true'){  
-                setStatus('authenticated')
-                setUserId(storedUserId);
-                
-            }else{
-                setStatus('unauthenticated')
+            if (isAuthenticated === 'true') {
+                setStatus('authenticated');
+                const numerdoId = await AsyncStorage.getItem('userId');
+                if (numerdoId) {
+                    setUserId(numerdoId);
+                    console.log('Numero de id: ', numerdoId);
+                } else {
+                    console.warn('No se encontro userId en AsyncStorage');
+                }
+            } else {
+                setStatus('unauthenticated');
             }
-
         };
 
-        cargarEstadoAuth()
-    }, [])
+        cargarEstadoAuth();
+    }, []);
 
     
 const login = async (username, password) => {
@@ -36,13 +37,15 @@ const login = async (username, password) => {
             console.log('users: ', users);
             
             const user = users.find( element => element.username === username && element.password === password)
-            
+            const numeroId = user.id
+            console.log('Numero de id: ', numeroId);
             console.log('user: ', user);
             if (user){
                 await AsyncStorage.setItem('isAuthenticated', 'true')
-              /*   await AsyncStorage.setItem('userId', user.id); */
                 setStatus('authenticated')
-                setUserId(user.id);
+                await AsyncStorage.setItem('userId', numeroId)
+                setUserId(numeroId)
+               
             }else{
                 setStatus('unauthenticated')
             }
@@ -65,7 +68,7 @@ const login = async (username, password) => {
                 body: JSON.stringify({
                     username,
                     email,
-                    password
+                    password,
                 })
             });
 
@@ -86,7 +89,7 @@ const login = async (username, password) => {
     }
    
  return (
-    <AuthContext.Provider value={{ status, login, register, logout}}>
+    <AuthContext.Provider value={{userId, status, login, register, logout}}>
         { children }
     </AuthContext.Provider>
  )
