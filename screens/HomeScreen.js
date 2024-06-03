@@ -1,87 +1,69 @@
-import React, { useContext, useEffect, useState } from 'react'
-import {StyleSheet, Text,TextInput, View, Button,FlatList} from "react-native";
-import { AuthContext, nombreUsuario } from '../context/AuthContext';
-import { useNavigation, NavigationContainer} from "@react-navigation/native";
-import {TareasContext}  from '../context/TareasContext'; 
+import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet, Text, TextInput, View, Button, FlatList } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { TareasContext } from '../context/TareasContext';
 
 export const HomeScreen = () => {
+  const navigation = useNavigation();
+  const { agregarTarea1, devolverTareasActivas } = useContext(TareasContext);
+  const { status, logout, userId } = useContext(AuthContext);
 
-  const navigation = useNavigation()
-
-  const {agregarTarea1, devolverTareasActivas  } = useContext(TareasContext)  
-
-  const { status, logout, userId, nombreUsuario } = useContext(AuthContext)
-  const [tareas, setTareas] = useState(devolverTareasActivas);
-  const {tareas1, setTareas1} =  useContext(TareasContext)
-  
+  const [tareas, setTareas] = useState([]);
   const [nombreTarea, setNombreTarea] = useState("");
 
+  useEffect(() => {  //useEffect cambiado
+    if (status === 'unauthenticated') {
+      navigation.navigate('Login');
+    } else {
+      const fetchTareas = async () => {
+        const tareasActivas = await devolverTareasActivas();
+        console.log('Tareas activas obtenidas en HomeScreen:', tareasActivas);  // Debugging log
+        setTareas(tareasActivas);
+      };
+      fetchTareas();
+    }
+  }, [status, userId, navigation]);//agrego userID
+
   const handleLogout = () => {
-  logout();
+    logout();
   };
 
-  const handleSubmit = () => {
-    console.log(userId)
+  const handleSubmit = async () => { //cambie el handleSubmit, async
     const nuevaTarea = {
       nombre: nombreTarea,
       descripcion: "Esto es una descripcion",
       idUsuario: userId
-  }
-        console.log("Se ha agregado una tarea: ", nuevaTarea)
-        agregarTarea1(nuevaTarea)
-    }
-;
-
-  useEffect( () => {
-    if( status === 'unauthenticated'){
-      navigation.navigate('Login')
-    }
-  }, [status, navigation])
-
-
-  
-  const agregarTarea = () => {
-    if (tarea.trim()) {
-      setTareas([...tareas, { id: Date.now().toString(), text: tarea }]);
-      setTarea("");
-    }
+    };
+    await agregarTarea1(nuevaTarea);
+    const tareasActualizadas = await devolverTareasActivas();
+    setTareas(tareasActualizadas);
+    setNombreTarea("");
   };
-  console.log("Datos de tareas:", devolverTareasActivas[0]);
 
-  return ( 
-
+  return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-
       <FlatList
-      data={tareas}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <View style={styles.tareaContainer}>
-          <Text style={styles.tareaText}>{item.nombre}</Text>
-          <Text style={styles.tareaText}>hola</Text>
-        </View>
-      )}
-      contentContainerStyle={styles.scrollContainer}
-    />
- 
-
-
+        data={tareas}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.tareaContainer}>
+            <Text style={styles.tareaText}>{item.nombre}</Text>
+            <Text style={styles.tareaText}>hola</Text>
+          </View>
+        )}
+        contentContainerStyle={styles.scrollContainer}
+      />
+      <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           placeholder="Tarea"
           value={nombreTarea}
           onChangeText={setNombreTarea}
         />
-<Button title="Agregar Tarea" onPress={handleSubmit} />
-{/* Finalidad espaciadora */}
-<View style={{ height: 20}} />
-<View style={styles.inputContainer}>
-</View>
-
-<Button title="Logout" onPress={handleLogout} color="red" />
-
-        
+        <Button title="Agregar Tarea" onPress={handleSubmit} />
+        <View style={{ height: 20 }} />
+        <Button title="Logout" onPress={handleLogout} color="red" />
       </View>
     </View>
   );
@@ -93,7 +75,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 100, // Espacio extra para evitar solapamiento con el input
+    paddingBottom: 200,
   },
   tareaContainer: {
     padding: 10,
@@ -123,4 +105,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-
