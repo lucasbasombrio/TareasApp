@@ -1,10 +1,12 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useEffect, useState, useContext  } from 'react'
 import { AuthContext } from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const TareasContext = createContext()
-const {status, login, register, userId} = useContext(AuthContext)
 
 export const TareaProvider = ({ children }) => {
+
+const {userId} = useContext(AuthContext)
 
     const [tareas, setTareas] = useState([])
     const [tareasActivas, setTareasActivas] = useState([])
@@ -14,12 +16,11 @@ export const TareaProvider = ({ children }) => {
 
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea')
             const data = await respuesta.json();
-            setTarea(data)
+            setTareas(data)
         } catch (error) {
             console.error('Error en el fetch de tareas: ', error)
         }
     }
-
     useEffect(() => {
         fetchTareas()
     }, [])
@@ -38,8 +39,8 @@ export const TareaProvider = ({ children }) => {
 
             if(respuesta.ok){
                 const tareaCreada = await respuesta.json()
-                console.log('Tarea creada: ', tareaCreada);
-                setTareas(( prevTarea) => [...prevTarea, productoCreado]) 
+                setTareas(( prevTarea) => [...prevTarea, tareaCreada]) 
+            
             }else{
                 alert('Error al agregar la tarea')
             }
@@ -49,19 +50,21 @@ export const TareaProvider = ({ children }) => {
         }
     }
 
-    const devolverTareasActivas = (tarea) => {
-       /*  const { userId } = useContext(AuthContext) */
-       try{
-        setTareasActivas((prevTareas) => {
-            const tareasFiltradas = prevTareas.filter(item => {
-                return userId === item.idUsuario;
-            });
+    const devolverTareasActivas = async () => {
+        try {
+            const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea');
+            if (!respuesta.ok) {
+                throw new Error('Error al obtener las tareas');
+            }
+            
+            const tareas = await respuesta.json();
+            const tareasFiltradas = tareas.filter(item => item.idUsuario === userId);
+            setTareas(tareasFiltradas);
             return tareasFiltradas;
-        });
-    }
-    catch (error) {
-        console.error('Error al obtener las tareas: ', error)
-    }
+        } catch (error) {
+            console.error('Error al obtener las tareas: ', error);
+            return [];
+        }
     };
 
 
@@ -71,8 +74,8 @@ export const TareaProvider = ({ children }) => {
 
   
  return (
-    <TareasContext.Provider value={{tareas, devolverTareasActivas, agregarTarea1, completarTarea, fetchTareas}}>
+    <TareasContext.Provider value={{tareas, TareaProvider, devolverTareasActivas, agregarTarea1, completarTarea, fetchTareas}}>
         { children }
     </TareasContext.Provider>
- )
+ )
 }

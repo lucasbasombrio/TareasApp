@@ -6,6 +6,7 @@ import SoloRegister from './screens/SoloRegister';
 import { HomeScreen } from './screens/HomeScreen';
 import { useContext } from 'react';
 import { AuthContext, AuthProvider } from './context/AuthContext';
+import { TareaProvider } from './context/TareasContext';
 
 const Stack = createStackNavigator();
 
@@ -47,19 +48,18 @@ return (
 export default function App() {
   return (
    
-<View style={styles.container}>
-<ImageBackground source={image} resizeMode="cover" style={styles.image}>
 
 <AuthProvider>
- 
+ <TareaProvider>
+
  <NavigationContainer>
    <AppNavigator />
  </NavigationContainer>
 
+ </TareaProvider>
 </AuthProvider>
 
-</ImageBackground>
-</View>
+
   );
 }
 

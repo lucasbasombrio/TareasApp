@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ImageBackground, Image, View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext } from '../context/AuthContext';
+import { TareaProvider } from '../context/TareasContext';
+
 
 export default function RegisterLoginScreen() {
 
@@ -12,6 +14,7 @@ export default function RegisterLoginScreen() {
   const [esLogin, setEsLogin] = useState(false);
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+
 
   const navigation = useNavigation();
   const handleSubmit = () => {
