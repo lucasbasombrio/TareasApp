@@ -2,20 +2,35 @@ import React, { useContext, useEffect, useState } from 'react'
 import {StyleSheet, Text,TextInput, View, Button,FlatList} from "react-native";
 import { AuthContext, nombreUsuario } from '../context/AuthContext';
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
-/* import { TareasContext } from '../context/TareasContext'; */
+import {TareasContext}  from '../context/TareasContext'; 
 
 export const HomeScreen = () => {
 
-  const navigation = useNavigation();
-  /* const {agregarTarea1} = useContext(TareasContext) */ 
+  const navigation = useNavigation()
 
-  const { status, logout, nombreUsuario } = useContext(AuthContext)
-  const [tarea, setTarea] = useState("");
-  const [tareas, setTareas] = useState([]);
+  const {agregarTarea1, devolverTareasActivas  } = useContext(TareasContext)  
+
+  const { status, logout, userId, nombreUsuario } = useContext(AuthContext)
+  const [tareas, setTareas] = useState(devolverTareasActivas);
+  const {tareas1, setTareas1} =  useContext(TareasContext)
+  
+  const [nombreTarea, setNombreTarea] = useState("");
 
   const handleLogout = () => {
   logout();
   };
+
+  const handleSubmit = () => {
+    console.log(userId)
+    const nuevaTarea = {
+      nombre: nombreTarea,
+      descripcion: "Esto es una descripcion",
+      idUsuario: userId
+  }
+        console.log("Se ha agregado una tarea: ", nuevaTarea)
+        agregarTarea1(nuevaTarea)
+    }
+;
 
   useEffect( () => {
     if( status === 'unauthenticated'){
@@ -23,37 +38,44 @@ export const HomeScreen = () => {
     }
   }, [status, navigation])
 
+
+  
   const agregarTarea = () => {
     if (tarea.trim()) {
       setTareas([...tareas, { id: Date.now().toString(), text: tarea }]);
       setTarea("");
     }
   };
+  console.log("Datos de tareas:", devolverTareasActivas[0]);
 
-  return (
+  return ( 
 
     <View style={styles.container}>
-      <Text></Text>
-      <FlatList
-        data={tareas}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.tareaContainer}>
-            <Text style={styles.tareaText}>{item.text}</Text>
-          </View>
-        )}
-        contentContainerStyle={styles.scrollContainer}
-      />
       <View style={styles.inputContainer}>
+
+      <FlatList
+      data={tareas}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <View style={styles.tareaContainer}>
+          <Text style={styles.tareaText}>{item.nombre}</Text>
+          <Text style={styles.tareaText}>hola</Text>
+        </View>
+      )}
+      contentContainerStyle={styles.scrollContainer}
+    />
+ 
+
+
         <TextInput
           style={styles.input}
           placeholder="Tarea"
-          value={tarea}
-          onChangeText={setTarea}
+          value={nombreTarea}
+          onChangeText={setNombreTarea}
         />
-<Button title="Agregar Tarea" onPress={agregarTarea} />
+<Button title="Agregar Tarea" onPress={handleSubmit} />
 {/* Finalidad espaciadora */}
-<View style={{ height: 50 }} />
+<View style={{ height: 20}} />
 <View style={styles.inputContainer}>
 </View>
 
