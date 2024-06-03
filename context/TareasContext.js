@@ -1,54 +1,55 @@
-import React, { createContext, useEffect, useState, useContext  } from 'react'
+import React, { createContext, useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const TareasContext = createContext()
+export const TareasContext = createContext();
 
 export const TareaProvider = ({ children }) => {
-
-const {userId} = useContext(AuthContext)
-
-    const [tareas, setTareas] = useState([])
-    const [tareasActivas, setTareasActivas] = useState([])
+    const { userId } = useContext(AuthContext);
+    const [tareas, setTareas] = useState([]);
+    const [tareasActivas, setTareasActivas] = useState([]);
 
     const fetchTareas = async () => {
         try {
-
-            const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea')
+            const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea');
             const data = await respuesta.json();
-            setTareas(data)
+            console.log('Tareas obtenidas:', data);  // Debugging log
+            const tareasFiltradas = data.filter(tarea => tarea.idUsuario === userId);
+            setTareas(tareasFiltradas);
+            setTareasActivas(tareasFiltradas.filter(tarea => !tarea.completada));
         } catch (error) {
-            console.error('Error en el fetch de tareas: ', error)
+            console.error('Error en el fetch de tareas: ', error);
         }
-    }
+    };
+
     useEffect(() => {
-        fetchTareas()
-    }, [])
+        if (userId) {
+            fetchTareas();
+        }
+    }, [userId]);
 
-
-    const agregarTarea1 =  async (nuevaTarea) => {
+    const agregarTarea1 = async (nuevaTarea) => {
         try {
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea', {
                 method: 'POST',
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(nuevaTarea)
-            })
-            console.log('Nueva Tarea: ', nuevaTarea);
-
-            if(respuesta.ok){
-                const tareaCreada = await respuesta.json()
-                setTareas(( prevTarea) => [...prevTarea, tareaCreada]) 
-            
-            }else{
-                alert('Error al agregar la tarea')
+                body: JSON.stringify({ ...nuevaTarea, idUsuario: userId })
+            });
+            if (respuesta.ok) {
+                const tareaCreada = await respuesta.json();
+                setTareas(prevTareas => [...prevTareas, tareaCreada]);
+                if (!tareaCreada.completada) {
+                    setTareasActivas(prevTareasActivas => [...prevTareasActivas, tareaCreada]);
+                }
+            } else {
+                alert('Error al agregar la tarea');
             }
         } catch (error) {
-            console.error('Error en la carga de la tarea: ', error)
-
+            console.error('Error en la carga de la tarea: ', error);
         }
-    }
+    };
 
     const devolverTareasActivas = async () => {
         try {
@@ -56,10 +57,9 @@ const {userId} = useContext(AuthContext)
             if (!respuesta.ok) {
                 throw new Error('Error al obtener las tareas');
             }
-            
             const tareas = await respuesta.json();
-            const tareasFiltradas = tareas.filter(item => item.idUsuario === userId);
-            setTareas(tareasFiltradas);
+            const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && !item.completada);
+            console.log('Tareas activas filtradas:', tareasFiltradas);  // Debugging log
             return tareasFiltradas;
         } catch (error) {
             console.error('Error al obtener las tareas: ', error);
@@ -67,15 +67,31 @@ const {userId} = useContext(AuthContext)
         }
     };
 
+    const completarTarea = async (tareaId) => {
+        try {
+            const respuesta = await fetch(`https://6657b1355c361705264597cb.mockapi.io/Tarea/${tareaId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ completada: true })
+            });
+            if (respuesta.ok) {
+                setTareas(prevTareas => prevTareas.map(tarea => 
+                    tarea.id === tareaId ? { ...tarea, completada: true } : tarea
+                ));
+                setTareasActivas(prevTareasActivas => prevTareasActivas.filter(tarea => tarea.id !== tareaId));
+            } else {
+                alert('Error al completar la tarea');
+            }
+        } catch (error) {
+            console.error('Error al completar la tarea: ', error);
+        }
+    };
 
-    const completarTarea = (tareaId) => {
-        setTareasActivas((prevItems) => prevItems.filter(item =>item.id !== tareaId))
-    }
-
-  
- return (
-    <TareasContext.Provider value={{tareas, TareaProvider, devolverTareasActivas, agregarTarea1, completarTarea, fetchTareas}}>
-        { children }
-    </TareasContext.Provider>
- )
-}
+    return (
+        <TareasContext.Provider value={{ tareas, tareasActivas, devolverTareasActivas, agregarTarea1, completarTarea, fetchTareas }}>
+            {children}
+        </TareasContext.Provider>
+    );
+};
