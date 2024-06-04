@@ -7,7 +7,7 @@ import { TareaProvider } from '../context/TareasContext';
 
 export default function RegisterLoginScreen() {
 
-  const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg');
+ const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg'); 
 
   const {status, login, register} = useContext(AuthContext)
 
