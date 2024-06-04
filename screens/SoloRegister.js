@@ -1,9 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
+import {ImageBackground, View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext } from '../context/AuthContext';
 
 export default function SoloRegister() {
+
+
+  
+  const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg');
 
   const {status, login, register} = useContext(AuthContext)
 
@@ -19,6 +23,8 @@ export default function SoloRegister() {
       login(username, password)
     }else{
       register(username, email, password)
+      navigation.navigate('Login')
+
     }
   }
   useEffect( () => {
@@ -42,8 +48,11 @@ export default function SoloRegister() {
   };
  
   return (
+    <View style={styles.container1}>
+    <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+
     <View style={styles.container}>
-      <Text style={styles.title}>{ esLogin ? 'Login' : 'Registrarse'}</Text>
+      <Text style={styles.title}>{'Registrarse'}</Text>
       
       {
         !esLogin && (
@@ -71,12 +80,23 @@ export default function SoloRegister() {
       <Button title={ esLogin ? 'Login' : 'Registrate'} onPress={handleSubmit}/>
 
     </View>
-   
+
+    
+</ImageBackground>
+</View>  
   );
 }
 
 
 const styles = StyleSheet.create({
+  container1: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: "center",
