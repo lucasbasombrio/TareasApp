@@ -29,8 +29,7 @@ export const AuthProvider = ({ children }) => {
         cargarEstadoAuth();
     }, []);
 
-    const esLogable = async (username, password) => {
-
+    const esLogeable = async (username, password) => {
         try {
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
             const users = await respuesta.json()
@@ -41,13 +40,11 @@ export const AuthProvider = ({ children }) => {
             console.log('Numero de id: ', numeroId);
             console.log('user: ', user);
             if (user){
-                return esLog = true;
+                return user
             }else{
-                return esLog = false;
+                return undefined
             }
-
         } catch (error) {
-            console.error('El usuario no existe')
             console.log(error)
            /*  console.error('Error en el fetch: ', error) */
           
@@ -56,33 +53,24 @@ export const AuthProvider = ({ children }) => {
     }
 
     
-const login = async (username, password) => {
-
-            try {
-                const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
-                const users = await respuesta.json()
-                console.log('users: ', users);
-                
-                const user = users.find( element => element.username === username && element.password === password)
-                const numeroId = user.id
-                console.log('Numero de id: ', numeroId);
-                console.log('user: ', user);
-                
-                if (user){
-                await AsyncStorage.setItem('isAuthenticated', 'true')
-                setStatus('authenticated')
-                await AsyncStorage.setItem('userId', numeroId)
-                setUserId(numeroId)
-            }else{
-                alert('El usuario no existe')
-                setStatus('unauthenticated')
+    const login = async (username, password) => {
+        try {
+            const user = await esLogeable(username, password);
+            if (user) {
+                await AsyncStorage.setItem('isAuthenticated', 'true');
+                setStatus('authenticated');
+                await AsyncStorage.setItem('userId', user.id);
+                setUserId(user.id);
+            } else {
+                console.error('El usuario no existe')
+                setStatus('unauthenticated');
             }
-        }catch (error) {
-             console.error('El usuario no existe') 
-            console.log(error)
-           /*  console.error('Error en el fetch: ', error) */
-          
-        }}
+        } catch (error) {
+            console.error('Error en el login: ', error);
+            alert('Error en el login');
+        }
+    };
+    
         // https://6656578f9f970b3b36c51233.mockapi.io/api/v1/usuarios
     
 
