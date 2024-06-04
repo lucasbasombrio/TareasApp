@@ -2,16 +2,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ImageBackground, Image, View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext } from '../context/AuthContext';
+import { TareaProvider } from '../context/TareasContext';
+
 
 export default function RegisterLoginScreen() {
 
-  const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg');
+ const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg'); 
 
   const {status, login, register} = useContext(AuthContext)
 
   const [esLogin, setEsLogin] = useState(false);
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+
 
   const navigation = useNavigation();
   const handleSubmit = () => {
