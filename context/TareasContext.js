@@ -16,7 +16,7 @@ export const TareaProvider = ({ children }) => {
             console.log('Tareas obtenidas:', data);  // Debugging log
             const tareasFiltradas = data.filter(tarea => tarea.idUsuario === userId);
             setTareas(tareasFiltradas);
-            setTareasActivas(tareasFiltradas.filter(tarea => !tarea.completada));
+            setTareasActivas(tareasFiltradas.filter(tarea => tarea.estaActiva));
         } catch (error) {
             console.error('Error en el fetch de tareas: ', error);
         }
@@ -40,7 +40,7 @@ export const TareaProvider = ({ children }) => {
             if (respuesta.ok) {
                 const tareaCreada = await respuesta.json();
                 setTareas(prevTareas => [...prevTareas, tareaCreada]);
-                if (!tareaCreada.completada) {
+                if (tareaCreada.estaActiva) {
                     setTareasActivas(prevTareasActivas => [...prevTareasActivas, tareaCreada]);
                 }
             } else {
@@ -58,7 +58,7 @@ export const TareaProvider = ({ children }) => {
                 throw new Error('Error al obtener las tareas');
             }
             const tareas = await respuesta.json();
-            const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && !item.completada);
+            const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && item.estaActiva);
             console.log('Tareas activas filtradas:', tareasFiltradas);  // Debugging log
             return tareasFiltradas;
         } catch (error) {
@@ -74,11 +74,11 @@ export const TareaProvider = ({ children }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ completada: true })
+                body: JSON.stringify({ estaActiva: false })
             });
             if (respuesta.ok) {
                 setTareas(prevTareas => prevTareas.map(tarea => 
-                    tarea.id === tareaId ? { ...tarea, completada: true } : tarea
+                    tarea.id === tareaId ? { ...tarea, estaActiva: false } : tarea
                 ));
                 setTareasActivas(prevTareasActivas => prevTareasActivas.filter(tarea => tarea.id !== tareaId));
             } else {
