@@ -76,36 +76,34 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, email, password) => {
 
-        const esLogin = await esLogable(username, email, password);
-        setStatus('unauthenticated')
-if(!esLogin) {
         try {
-            const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario',{
-                method: 'POST',
-                headers: {
-                    'Content-Type':'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password,
-                })
-            });
-            if(respuesta.ok){
-                alert('Registro Exitoso')
+            const esLogin = await esLogeable(username, email, password);
+            if (!esLogin) {
+                const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                    })
+                });
+                if (respuesta.ok) {
+                    alert('Registro Exitoso');
+                } else {
+                    alert('Error en el registro');
+                }
             } else {
-                alert('Error en el registro');
+                setStatus('unauthenticated');
+                console.error('El usuario ya tiene una cuenta asociada');
             }
         } catch (error) {
-            console.error('Fallo el registro: ', error)
-            alert('Error al registrarse')
+            console.error('Fallo el registro: ', error);
+            alert('Error al registrarse');
         }
-     } else{
-        setStatus('unauthenticated')
-        console.error('El usuario ya tiene una cuenta asociada')
-
-        }
-    }
+    };
 
     const logout = async () => {
         await AsyncStorage.removeItem('isAuthenticated');
