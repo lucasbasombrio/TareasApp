@@ -6,6 +6,7 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
     const [status, setStatus] = useState('checking');
     const [userId, setUserId] = useState(null);
+    const [esLogin, setEsLogin] = useState(false);
 
     useEffect(() => {
         const cargarEstadoAuth = async () => {
@@ -28,8 +29,7 @@ export const AuthProvider = ({ children }) => {
         cargarEstadoAuth();
     }, []);
 
-    
-const login = async (username, password) => {
+    const esLogable = async (username, password) => {
 
         try {
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
@@ -41,24 +41,56 @@ const login = async (username, password) => {
             console.log('Numero de id: ', numeroId);
             console.log('user: ', user);
             if (user){
-                await AsyncStorage.setItem('isAuthenticated', 'true')
-                setStatus('authenticated')
-                await AsyncStorage.setItem('userId', numeroId)
-                setUserId(numeroId)
-               
+                return esLog = true;
             }else{
-                setStatus('unauthenticated')
+                return esLog = false;
             }
 
         } catch (error) {
-            console.error('Error en el fetch: ', error)
-            alert('Error en login')
+            console.error('El usuario no existe')
+            console.log(error)
+           /*  console.error('Error en el fetch: ', error) */
+          
         }
         // https://6656578f9f970b3b36c51233.mockapi.io/api/v1/usuarios
     }
 
+    
+const login = async (username, password) => {
+
+            try {
+                const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
+                const users = await respuesta.json()
+                console.log('users: ', users);
+                
+                const user = users.find( element => element.username === username && element.password === password)
+                const numeroId = user.id
+                console.log('Numero de id: ', numeroId);
+                console.log('user: ', user);
+                
+                if (user){
+                await AsyncStorage.setItem('isAuthenticated', 'true')
+                setStatus('authenticated')
+                await AsyncStorage.setItem('userId', numeroId)
+                setUserId(numeroId)
+            }else{
+                alert('El usuario no existe')
+                setStatus('unauthenticated')
+            }
+        }catch (error) {
+             console.error('El usuario no existe') 
+            console.log(error)
+           /*  console.error('Error en el fetch: ', error) */
+          
+        }}
+        // https://6656578f9f970b3b36c51233.mockapi.io/api/v1/usuarios
+    
+
     const register = async (username, email, password) => {
 
+        const esLogin = await esLogable(username, email, password);
+        setStatus('unauthenticated')
+if(!esLogin) {
         try {
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario',{
                 method: 'POST',
@@ -71,7 +103,6 @@ const login = async (username, password) => {
                     password,
                 })
             });
-
             if(respuesta.ok){
                 alert('Registro Exitoso')
             } else {
@@ -80,6 +111,11 @@ const login = async (username, password) => {
         } catch (error) {
             console.error('Fallo el registro: ', error)
             alert('Error al registrarse')
+        }
+     } else{
+        setStatus('unauthenticated')
+        console.error('El usuario ya tiene una cuenta asociada')
+
         }
     }
 

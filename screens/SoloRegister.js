@@ -22,6 +22,7 @@ export default function SoloRegister() {
     if(esLogin){
       login(username, password)
     }else{
+      
       register(username, email, password)
       navigation.navigate('Login')
 
