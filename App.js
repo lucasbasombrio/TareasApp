@@ -49,6 +49,7 @@ export default function App() {
   return (
    
 
+
 <AuthProvider>
  <TareaProvider>
 
@@ -58,6 +59,7 @@ export default function App() {
 
  </TareaProvider>
 </AuthProvider>
+
 
 
   );
