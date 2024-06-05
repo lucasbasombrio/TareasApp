@@ -3,7 +3,6 @@ import {  ImageBackground, StyleSheet, Text, TextInput, View, Button, FlatList }
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { TareasContext } from '../context/TareasContext';
-import CheckBox from '@react-native-community/checkbox';
 
 export const HomeScreen = () => {
 
@@ -82,6 +81,8 @@ const tareasActualizadas = await devolverTareasActivas();
           onChangeText={setNombreTarea}
         />
         <Button title="Agregar Tarea" onPress={handleSubmit} />
+        <View style={{ height: 20 }} />
+        <Button title="Mi perfil" onPress={() => navigation.navigate('Profile' )}  color="#28a745"/>
         <View style={{ height: 20 }} />
         <Button title="Logout" onPress={handleLogout} color="red" />
       </View>

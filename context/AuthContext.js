@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.log(error)
-           /*  console.error('Error en el fetch: ', error) */
+            console.error('Error en el fetch: ', error) 
           
         }
         // https://6656578f9f970b3b36c51233.mockapi.io/api/v1/usuarios
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
                 await AsyncStorage.setItem('userId', user.id);
                 setUserId(user.id);
             } else {
-                console.error('El usuario no existe')
+                console.error('El usuario y la contraseña no coinciden')
                 setStatus('unauthenticated');
             }
         } catch (error) {

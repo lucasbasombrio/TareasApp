@@ -29,6 +29,12 @@ export const TareaProvider = ({ children }) => {
     }, [userId]);
 
     const agregarTarea1 = async (nuevaTarea) => {
+          
+        if (nuevaTarea.nombre.length < 3) {
+            alert('La tarea debe tener al menos 3 caracteres.');
+            return;
+          }
+
         try {
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea', {
                 method: 'POST',
