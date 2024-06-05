@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export const HomeScreen = () => {
+export const DescriptionScreen = () => {
     return (
       <View styles={styles.container}>
           <Text styles={styles.texto}>DescriptionScreen</Text>
