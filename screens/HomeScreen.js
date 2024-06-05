@@ -3,7 +3,7 @@ import {  ImageBackground, StyleSheet, Text, TextInput, View, Button, FlatList }
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { TareasContext } from '../context/TareasContext';
-import CheckBox from '@react-native-community/checkbox';
+/* import CheckBox from '@react-native-community/checkbox'; */
 
 export const HomeScreen = () => {
 

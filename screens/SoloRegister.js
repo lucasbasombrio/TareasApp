@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import {ImageBackground, View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext } from '../context/AuthContext';
+import emailjs from "@emailjs/browser";
+import { send, EmailJSResponseStatus } from '@emailjs/react-native';
+
 
 export default function SoloRegister() {
 
@@ -33,6 +36,32 @@ export default function SoloRegister() {
       navigation.navigate('Home')
     }
   }, [status, navigation])
+
+  const onSubmit = async (email) => {
+    try {
+      await send(
+        "service_zm6njvv",
+        "template_8vgjonh",
+        {
+          email,
+          message:`${email},\n Se ha registrado correctamente`
+        },
+        {
+          publicKey: "2U72Hx1uyrdY-U1rv",
+          privateKey:"0xjvh0Qxkq_kmcRtnJmDc"
+        }
+      );
+
+      console.log("SUCCESS!");
+    } catch (err) {
+      if (err instanceof EmailJSResponseStatus) {
+        console.log("EmailJS Request Failed...", err);
+      }
+
+      console.log("ERROR", err);
+    }
+  };
+
 
 /*   const HandleRegister = () => {
     if (email === "admin" && password === "admin") {
@@ -78,7 +107,13 @@ export default function SoloRegister() {
         value={password}
         onChangeText={setPassword}
       />
-      <Button title={ esLogin ? 'Login' : 'Registrate'} onPress={handleSubmit}/>
+      <Button title={ esLogin ? 'Login' : 'Registrate'}  onPress={() => {
+              handleSubmit();
+              onSubmit(email);
+            }}
+            type="submit"
+            value="Send"
+          />
 
     </View>
 
