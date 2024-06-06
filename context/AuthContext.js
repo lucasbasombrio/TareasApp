@@ -29,6 +29,13 @@ export const AuthProvider = ({ children }) => {
         cargarEstadoAuth();
     }, []);
 
+    function validarEmail  (email) {
+    
+        const emailValido = email.endsWith('@gmail.com') || email.endsWith('@hotmail.com') || email.endsWith('@yahoo.com.ar')
+
+        return emailValido
+    }
+
     const esLogeable = async (username, password) => {
         try {
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Usuario');
@@ -62,7 +69,7 @@ export const AuthProvider = ({ children }) => {
                 await AsyncStorage.setItem('userId', user.id);
                 setUserId(user.id);
             } else {
-                console.error('El usuario no existe')
+                console.error('Usuario o contraseña incorrecta')
                 setStatus('unauthenticated');
             }
         } catch (error) {
@@ -75,7 +82,8 @@ export const AuthProvider = ({ children }) => {
     
 
     const register = async (username, email, password) => {
-
+       
+       if (validarEmail(email)){
         try {
             const esLogin = await esLogeable(username, email, password);
             if (!esLogin) {
@@ -92,18 +100,24 @@ export const AuthProvider = ({ children }) => {
                 });
                 if (respuesta.ok) {
                     alert('Registro Exitoso');
+                    exitosoRegistro = true
                 } else {
                     alert('Error en el registro');
                 }
             } else {
                 setStatus('unauthenticated');
                 console.error('El usuario ya tiene una cuenta asociada');
+             
             }
         } catch (error) {
             console.error('Fallo el registro: ', error);
             alert('Error al registrarse');
+           
         }
+    }
+    return exitosoRegistro
     };
+
 
     const logout = async () => {
         await AsyncStorage.removeItem('isAuthenticated');
@@ -111,7 +125,7 @@ export const AuthProvider = ({ children }) => {
     }
    
  return (
-    <AuthContext.Provider value={{userId, status, login, register, logout}}>
+    <AuthContext.Provider value={{userId, status, login, register, logout, validarEmail}}>
         { children }
     </AuthContext.Provider>
  )
