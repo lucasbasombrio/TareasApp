@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 export const AuthContext = createContext()
 
@@ -7,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [status, setStatus] = useState('checking');
     const [userId, setUserId] = useState(null);
     const [esLogin, setEsLogin] = useState(false);
+    const [autenticadoHuella, setAutenticadoHuella] = useState('Autenticación fallida');
 
     useEffect(() => {
         const cargarEstadoAuth = async () => {
@@ -63,13 +65,19 @@ export const AuthProvider = ({ children }) => {
     const login = async (username, password) => {
         try {
             const user = await esLogeable(username, password);
+    
             if (user) {
-                await AsyncStorage.setItem('isAuthenticated', 'true');
-                setStatus('authenticated');
-                await AsyncStorage.setItem('userId', user.id);
-                setUserId(user.id);
+                const autenticadoHuella = await iniciarConHuella();
+                if (autenticadoHuella) {
+                    await AsyncStorage.setItem('isAuthenticated', 'true');
+                    setStatus('authenticated');
+                    await AsyncStorage.setItem('userId', user.id);
+                    setUserId(user.id);
+                } else {
+                    console.error('Autenticación por huella digital fallida');
+                }
             } else {
-                console.error('Usuario o contraseña incorrecta')
+                console.error('Usuario o contraseña incorrecta');
                 setStatus('unauthenticated');
             }
         } catch (error) {
@@ -123,9 +131,25 @@ export const AuthProvider = ({ children }) => {
         await AsyncStorage.removeItem('isAuthenticated');
         setStatus('unauthenticated')
     }
+
+    const iniciarConHuella = async () => {
+        try{
+          const resultado = await LocalAuthentication.authenticateAsync();
+              if (resultado.success) {
+                setAutenticadoHuella('Autenticación exitosa');
+                return true
+              } else {
+                setAutenticadoHuella('Autenticación fallida');
+              }
+            } catch (error) {
+              console.error('Error al autenticar:', error);
+              setAutenticadoHuella('Error al autenticar');
+              return false
+            }
+          };
    
  return (
-    <AuthContext.Provider value={{userId, status, login, register, logout, validarEmail}}>
+    <AuthContext.Provider value={{userId, status, login, register, logout, validarEmail, iniciarConHuella}}>
         { children }
     </AuthContext.Provider>
  )

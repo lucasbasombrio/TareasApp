@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {ImageBackground, View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext, validarEmail } from '../context/AuthContext';
-import emailjs from "@emailjs/browser";
+import {emailjs} from "@emailjs/browser"
 import { send, EmailJSResponseStatus } from '@emailjs/react-native';
 
 
@@ -64,17 +64,6 @@ export default function SoloRegister() {
       console.log("ERROR", err);
     }
   };
-
-
-/*   const HandleRegister = () => {
-    if (email === "admin" && password === "admin") {
-      alert(`${nombre} se ha registrado correctamente`);
-      navigation.navigate("Home");
-    } else {
-      alert("Login Fallado");
-    }
-  }; */
-
 
   const IrALogin = () => {
     setEsLogin(true);
