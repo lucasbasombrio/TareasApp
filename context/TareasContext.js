@@ -59,7 +59,23 @@ export const TareaProvider = ({ children }) => {
             }
             const tareas = await respuesta.json();
             const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && item.estaActiva);
-            console.log('Tareas activas filtradas:', tareasFiltradas);  // Debugging log
+            console.log('Tareas activas filtradas:', tareasFiltradas);  
+            return tareasFiltradas;
+        } catch (error) {
+            console.error('Error al obtener las tareas: ', error);
+            return [];
+        }
+    };
+
+    const devolverTareasCompletadas = async () => {
+        try {
+            const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea');
+            if (!respuesta.ok) {
+                throw new Error('Error al obtener las tareas');
+            }
+            const tareas = await respuesta.json();
+            const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && !item.estaActiva);
+            console.log('Tareas completadas filtradas:', tareasFiltradas);  
             return tareasFiltradas;
         } catch (error) {
             console.error('Error al obtener las tareas: ', error);
@@ -90,7 +106,8 @@ export const TareaProvider = ({ children }) => {
     };
 
     return (
-        <TareasContext.Provider value={{ tareas, tareasActivas, devolverTareasActivas, agregarTarea1, completarTarea, fetchTareas }}>
+        <TareasContext.Provider value={{ tareas, tareasActivas, devolverTareasActivas, agregarTarea1, 
+        completarTarea, fetchTareas, devolverTareasCompletadas }}>
             {children}
         </TareasContext.Provider>
     );

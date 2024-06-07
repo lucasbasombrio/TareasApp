@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { TareasContext } from '../context/TareasContext';
 import CheckBox from '@react-native-community/checkbox';
+import TareasCompletadasScreen from './TareasCompletadasScreen';
 
 export const HomeScreen = () => {
 
@@ -83,6 +84,8 @@ const tareasActualizadas = await devolverTareasActivas();
         />
         <Button title="Agregar Tarea" onPress={handleSubmit} />
         <View style={{ height: 20 }} />
+        <Button title="Pagina Tareas Completadas" onPress={() => navigation.navigate('TareasCompletadasScreen')} />
+        <View style={{ height: 20 }} />
         <Button title="Logout" onPress={handleLogout} color="red" />
       </View>
       </View>
@@ -90,9 +93,9 @@ const tareasActualizadas = await devolverTareasActivas();
       </ImageBackground>
     </View> */
 
-
-
   );
+
+
 };
 
 const styles = StyleSheet.create({

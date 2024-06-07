@@ -7,6 +7,7 @@ import { HomeScreen } from './screens/HomeScreen';
 import { useContext } from 'react';
 import { AuthContext, AuthProvider } from './context/AuthContext';
 import { TareaProvider } from './context/TareasContext';
+import TareasCompletadasScreen from './screens/TareasCompletadasScreen';
 
 const Stack = createStackNavigator();
 
@@ -14,8 +15,6 @@ const image = {uri: 'https://legacy.reactjs.org/logo-og.png'};
 
 function AppNavigator(){
   const { status } = useContext(AuthContext)
-
-  
 
 return (
   
@@ -35,7 +34,11 @@ return (
           <Stack.Screen name="SoloRegister" component={SoloRegister} />
         </>
       ) : (
+        <>
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Tareas Completadas" component={TareasCompletadasScreen} />
+        </>
+        
         
       )}
     </Stack.Navigator>
