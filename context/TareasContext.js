@@ -105,16 +105,32 @@ export const TareaProvider = ({ children }) => {
         }
     };
 
-    const RehacerTarea = async(tareaId) => {
-        await completarTarea(tareaId)
-      const tareasActualizadas = await devolverTareasCompletadas(); 
-        setTareas(tareasActualizadas);
-        setNombreTarea("");
-      }; 
+
+    const RehacerTarea = async (tareaId) => {
+        try {
+            const respuesta = await fetch(`https://6657b1355c361705264597cb.mockapi.io/Tarea/${tareaId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ estaActiva: true })
+            });
+            if (respuesta.ok) {
+                setTareas(prevTareas => prevTareas.map(tarea => 
+                    tarea.id === tareaId ? { ...tarea, estaActiva: true } : tarea
+                ));
+                setTareasActivas(prevTareasActivas => [...prevTareasActivas, tareaId]);
+            } else {
+                alert('Error al marcar la tarea como activa');
+            }
+        } catch (error) {
+            console.error('Error al marcar la tarea como activa: ', error);
+        }
+    }; 
 
     return (
         <TareasContext.Provider value={{ tareas, tareasActivas, devolverTareasActivas, agregarTarea1, 
-        completarTarea, fetchTareas, devolverTareasCompletadas }}>
+        completarTarea, fetchTareas, devolverTareasCompletadas, RehacerTarea }}>
             {children}
         </TareasContext.Provider>
     );

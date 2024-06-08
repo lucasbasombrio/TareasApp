@@ -10,7 +10,7 @@ export const TareasCompletadasScreen = () => {
     /* const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg'); */
     
     const navigation = useNavigation();
-    const { agregarTarea1, completarTarea, devolverTareasCompletadas } = useContext(TareasContext);
+    const { agregarTarea1, completarTarea, devolverTareasCompletadas, RehacerTarea } = useContext(TareasContext);
     const { status, logout, userId } = useContext(AuthContext);
   
     const [tareas, setTareas] = useState([]);
@@ -43,9 +43,7 @@ export const TareasCompletadasScreen = () => {
           renderItem={({ item }) => (
             <View style={styles.tareaContainer}>
               <Text style={styles.tareaText}>{item.nombre}</Text>
-              <Button
-    title="Rehacer tarea" onPress={() => RehacerTarea(item.id)} color='green'
-  />
+              <Button title="Rehacer tarea" onPress={() => RehacerTarea(item.id)} color='green' />
             </View>
             
           )}
