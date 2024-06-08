@@ -29,12 +29,7 @@ export const TareasCompletadasScreen = () => {
       }
     }, [status, userId, navigation]);//agrego userID
   
-     const RehacerTarea = async(tareaId) => {
-      await completarTarea(tareaId)
-    const tareasActualizadas = await devolverTareasCompletadas(); 
-      setTareas(tareasActualizadas);
-      setNombreTarea("");
-    };  
+ 
   
        return (
    /* <View style={styles.container1}>
@@ -64,9 +59,6 @@ export const TareasCompletadasScreen = () => {
             value={nombreTarea}
             onChangeText={setNombreTarea}
           />
-          <Button title="Volver a HomeScreen" onPress={volverAHomeScreen()} />
-          <View style={{ height: 20 }} />
-          <Button title="Logout" onPress={handleLogout} color="red" />
         </View>
         </View>
   /* 

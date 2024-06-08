@@ -36,7 +36,7 @@ return (
       ) : (
         <>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Tareas Completadas" component={TareasCompletadasScreen} />
+        <Stack.Screen name="TareasCompletadasScreen" component={TareasCompletadasScreen} />
         </>
         
         

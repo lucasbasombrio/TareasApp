@@ -105,6 +105,13 @@ export const TareaProvider = ({ children }) => {
         }
     };
 
+    const RehacerTarea = async(tareaId) => {
+        await completarTarea(tareaId)
+      const tareasActualizadas = await devolverTareasCompletadas(); 
+        setTareas(tareasActualizadas);
+        setNombreTarea("");
+      }; 
+
     return (
         <TareasContext.Provider value={{ tareas, tareasActivas, devolverTareasActivas, agregarTarea1, 
         completarTarea, fetchTareas, devolverTareasCompletadas }}>
