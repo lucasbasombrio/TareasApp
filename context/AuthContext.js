@@ -58,7 +58,6 @@ export const AuthProvider = ({ children }) => {
            /*  console.error('Error en el fetch: ', error) */
           
         }
-        // https://6656578f9f970b3b36c51233.mockapi.io/api/v1/usuarios
     }
 
     
@@ -85,10 +84,7 @@ export const AuthProvider = ({ children }) => {
             alert('Error en el login');
         }
     };
-    
-        // https://6656578f9f970b3b36c51233.mockapi.io/api/v1/usuarios
-    
-
+  
     const register = async (username, email, password) => {
        
        if (validarEmail(email)){
