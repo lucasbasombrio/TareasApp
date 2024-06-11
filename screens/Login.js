@@ -15,15 +15,14 @@ export default function RegisterLoginScreen() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-
   const navigation = useNavigation();
-  const handleSubmit = () => {
   
+  const handleSubmit = () => {
+   
         const loginResult =  login(username, password);
         if (loginResult === 'success') {
             navigation.navigate('Home');
-        }
-    
+        }   
 };
 
   useEffect( () => {
@@ -64,7 +63,10 @@ export default function RegisterLoginScreen() {
         value={password}
         onChangeText={setPassword}
       />
-      <Button title={'Iniciar sesion'} onPress={handleSubmit}/>
+  <Button 
+  title={'Iniciar sesión'} 
+  onPress={handleSubmit}  
+/>
 
 {/* Finalidad espaciadora */}
 <View style={{ height: 5}} />
