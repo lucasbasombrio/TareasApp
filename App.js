@@ -8,7 +8,7 @@ import { HomeScreen } from './screens/HomeScreen';
 import { useContext } from 'react';
 import { AuthContext, AuthProvider } from './context/AuthContext';
 import { TareaProvider } from './context/TareasContext';
-import ProfileScreen from './Components/ProfileScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
