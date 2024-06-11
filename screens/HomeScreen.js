@@ -1,51 +1,67 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {  ImageBackground, StyleSheet, Text, TextInput, View, Button, FlatList } from 'react-native';
-import { AuthContext } from '../context/AuthContext';
-import { useNavigation } from '@react-navigation/native';
-import { TareasContext } from '../context/TareasContext';
-/* import CheckBox from '@react-native-community/checkbox'; */
+import React, { useContext, useEffect, useState } from "react";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Button,
+  FlatList,
+} from "react-native";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { TareasContext } from "../context/TareasContext";
+//import CheckBox from "@react-native-community/checkbox";
 
 export const HomeScreen = () => {
-
-  /* const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg'); */
   
   const navigation = useNavigation();
   const { agregarTarea1, completarTarea, devolverTareasActivas } = useContext(TareasContext);
   const { status, logout, userId } = useContext(AuthContext);
-
   const [tareas, setTareas] = useState([]);
   const [nombreTarea, setNombreTarea] = useState("");
 
-  useEffect(() => {  //useEffect cambiado
-    if (status === 'unauthenticated') {
-      navigation.navigate('Login');
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      navigation.navigate("Login");
     } else {
       const fetchTareas = async () => {
         const tareasActivas = await devolverTareasActivas();
-        console.log('Tareas activas obtenidas en HomeScreen:', tareasActivas);  // Debugging log
+        console.log("Tareas activas obtenidas en HomeScreen:", tareasActivas);
         setTareas(tareasActivas);
       };
       fetchTareas();
     }
-  }, [status, userId, navigation]);//agrego userID
+  }, [status, userId, navigation]);
+
+  // useFocusEffect refresca las tareas
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchTareas = async () => {
+        const tareasActivas = await devolverTareasActivas();
+        setTareas(tareasActivas);
+      };
+      fetchTareas();
+    }, [])
+  );
 
   const handleLogout = () => {
     logout();
   };
 
-   const eliminarTarea = async(tareaId) => {
-    await completarTarea(tareaId)
-const tareasActualizadas = await devolverTareasActivas(); 
+  const eliminarTarea = async (tareaId) => {
+    await completarTarea(tareaId);
+    const tareasActualizadas = await devolverTareasActivas();
     setTareas(tareasActualizadas);
     setNombreTarea("");
-  };  
+  };
 
-  const handleSubmit = async () => { //cambie el handleSubmit, async
+  const handleSubmit = async () => {
     const nuevaTarea = {
       nombre: nombreTarea,
       descripcion: "Esto es una descripcion",
       idUsuario: userId,
-      estaActiva: true
+      estaActiva: true,
     };
     await agregarTarea1(nuevaTarea);
     const tareasActualizadas = await devolverTareasActivas();
@@ -54,25 +70,21 @@ const tareasActualizadas = await devolverTareasActivas();
   };
 
   return (
- /*    <View style={styles.container1}>
-<ImageBackground source={image} resizeMode="cover" style={styles.image}> */
-
-
-<View style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={tareas}
-        keyExtractor={(item) => item.id.toString()} // Convertir a string el ID
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.tareaContainer}>
             <Text style={styles.tareaText}>{item.nombre}</Text>
             <Button
-  title="Completar tarea" onPress={() => eliminarTarea(item.id)} color='green'
-/>
+              title="Completar tarea"
+              onPress={() => eliminarTarea(item.id)}
+              color="green"
+            />
           </View>
-          
         )}
         contentContainerStyle={styles.scrollContainer}
-        
       />
       <View style={styles.inputContainer}>
         <TextInput
@@ -83,26 +95,25 @@ const tareasActualizadas = await devolverTareasActivas();
         />
         <Button title="Agregar Tarea" onPress={handleSubmit} />
         <View style={{ height: 20 }} />
+        <Button
+          title="Pagina Tareas Completadas"
+          onPress={() => navigation.navigate("TareasCompletadasScreen")}
+        />
+        <View style={{ height: 20 }} />
         <Button title="Logout" onPress={handleLogout} color="red" />
       </View>
-      </View>
-/* 
-      </ImageBackground>
-    </View> */
-
-
-
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container1: {
-     flex: 1,
-    justifyContent: 'center', 
+    flex: 1,
+    justifyContent: "center",
   },
   image: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 
   container: {
@@ -118,25 +129,21 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-    textAlign: "center"
+    textAlign: "center",
   },
   tareaText: {
     fontSize: 18,
     textAlign: "center",
     borderWidth: 1,
-    borderColor: "green"
-
+    borderColor: "green",
   },
   inputContainer: {
-   /*  position: 'absolute', */
     left: 0,
     right: 0,
     bottom: 0,
     padding: 10,
     borderTopWidth: 1,
     borderTopColor: "#ccc",
-    backgroundColor: ""
-   
   },
   input: {
     height: 40,
@@ -144,13 +151,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
-    textAlign: "center"
+    textAlign: "center",
   },
-  boton:  {
-   width: 1, // Anchura del botón
-  height: 2040215, // Altura del botón
-  color: "red"
-}
+  boton: {
+    width: 1,
+    height: 2040215,
+    color: "red",
+  },
 });
 
 export default HomeScreen;

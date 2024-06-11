@@ -59,7 +59,23 @@ export const TareaProvider = ({ children }) => {
             }
             const tareas = await respuesta.json();
             const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && item.estaActiva);
-            console.log('Tareas activas filtradas:', tareasFiltradas);  // Debugging log
+            console.log('Tareas activas filtradas:', tareasFiltradas);  
+            return tareasFiltradas;
+        } catch (error) {
+            console.error('Error al obtener las tareas: ', error);
+            return [];
+        }
+    };
+
+    const devolverTareasCompletadas = async () => {
+        try {
+            const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea');
+            if (!respuesta.ok) {
+                throw new Error('Error al obtener las tareas');
+            }
+            const tareas = await respuesta.json();
+            const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && !item.estaActiva);
+            console.log('Tareas completadas filtradas:', tareasFiltradas);  
             return tareasFiltradas;
         } catch (error) {
             console.error('Error al obtener las tareas: ', error);
@@ -89,8 +105,32 @@ export const TareaProvider = ({ children }) => {
         }
     };
 
+
+    const RehacerTarea = async (tareaId) => {
+        try {
+            const respuesta = await fetch(`https://6657b1355c361705264597cb.mockapi.io/Tarea/${tareaId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ estaActiva: true })
+            });
+            if (respuesta.ok) {
+                setTareas(prevTareas => prevTareas.map(tarea => 
+                    tarea.id === tareaId ? { ...tarea, estaActiva: true } : tarea
+                ));
+                setTareasActivas(prevTareasActivas => [...prevTareasActivas, tareaId]);
+            } else {
+                alert('Error al marcar la tarea como activa');
+            }
+        } catch (error) {
+            console.error('Error al marcar la tarea como activa: ', error);
+        }
+    }; 
+
     return (
-        <TareasContext.Provider value={{ tareas, tareasActivas, devolverTareasActivas, agregarTarea1, completarTarea, fetchTareas }}>
+        <TareasContext.Provider value={{ tareas, tareasActivas, devolverTareasActivas, agregarTarea1, 
+        completarTarea, fetchTareas, devolverTareasCompletadas, RehacerTarea }}>
             {children}
         </TareasContext.Provider>
     );
