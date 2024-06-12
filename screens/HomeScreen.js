@@ -42,7 +42,7 @@ export const HomeScreen = () => {
         setTareas(tareasActivas);
       };
       fetchTareas();
-    }, [])
+    }, [userId])
   );
 
   const handleLogout = () => {
