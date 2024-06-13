@@ -7,7 +7,7 @@ import { HomeScreen } from "./screens/HomeScreen";
 import { useContext } from "react";
 import { AuthContext, AuthProvider } from "./context/AuthContext";
 import { TareaProvider } from "./context/TareasContext";
-import TareasCompletadasScreen from "./screens/TareasCompletadasScreen";
+import PerfilScreen from "./screens/PerfilScreen";
 
 const Stack = createStackNavigator();
 
@@ -35,8 +35,8 @@ function AppNavigator() {
         <>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen
-            name="TareasCompletadasScreen"
-            component={TareasCompletadasScreen}
+            name="PerfilScreen"
+            component={PerfilScreen}
           />
         </>
       )}

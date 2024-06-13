@@ -14,7 +14,6 @@ import { TareasContext } from "../context/TareasContext";
 //import CheckBox from "@react-native-community/checkbox";
 
 export const HomeScreen = () => {
-  
   const navigation = useNavigation();
   const { agregarTarea1, completarTarea, devolverTareasActivas } = useContext(TareasContext);
   const { status, logout, userId } = useContext(AuthContext);
@@ -95,12 +94,14 @@ export const HomeScreen = () => {
         />
         <Button title="Agregar Tarea" onPress={handleSubmit} />
         <View style={{ height: 20 }} />
-        <Button
-          title="Pagina Tareas Completadas"
-          onPress={() => navigation.navigate("TareasCompletadasScreen")}
-        />
-        <View style={{ height: 20 }} />
-        <Button title="Logout" onPress={handleLogout} color="red" />
+        <View style={styles.containerBottons}>
+          <Button
+            title="Perfil"
+            onPress={() => navigation.navigate("PerfilScreen")}
+          />
+          {/* <View style={{ height: 20 }} /> */}
+          <Button title="Logout" onPress={handleLogout} color="red" />
+        </View>
       </View>
     </View>
   );
@@ -157,6 +158,12 @@ const styles = StyleSheet.create({
     width: 1,
     height: 2040215,
     color: "red",
+  },
+  containerBottons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    paddingHorizontal: 50,
   },
 });
 

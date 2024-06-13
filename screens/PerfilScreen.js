@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {  ImageBackground, StyleSheet, Text, TextInput, View, Button, FlatList } from 'react-native';
+import {  ImageBackground, StyleSheet, Text, View, Button, FlatList } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { TareasContext } from '../context/TareasContext';
 
-export const TareasCompletadasScreen = () => {
+export const PerfilScreen = () => {
 
     /* const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg'); */
     
@@ -123,4 +123,4 @@ export const TareasCompletadasScreen = () => {
   }
   });
   
-  export default TareasCompletadasScreen;
+  export default PerfilScreen;
