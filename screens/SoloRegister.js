@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {ImageBackground, View,Text, Button,  StyleSheet,TextInput, Switch, tab} from "react-native";
+import {ImageBackground, View,Text, Button,  StyleSheet,TextInput, Image} from "react-native";
 import { useNavigation, NavigationContainer} from "@react-navigation/native";
 import { AuthContext, validarEmail } from '../context/AuthContext';
 import {emailjs} from "@emailjs/browser"
@@ -10,7 +10,7 @@ export default function SoloRegister() {
 
 
   
-  const image = require('../assets/graphic-2d-colorful-wallpaper-with-grainy-gradients.jpg');
+  const image = require('../assets/blue-and-white.jpg'); 
 
   const {status, login, register, validarEmail} = useContext(AuthContext)
 
@@ -72,7 +72,13 @@ export default function SoloRegister() {
   return (
     <View style={styles.container1}>
     <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-
+      <View style={styles.container2}>
+          <Image
+            source={require("../assets/logo-azul.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
     <View style={styles.container}>
       <Text style={styles.title}>{'Registrarse'}</Text>
       
@@ -134,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 20,
+    marginTop: -250,
   },
   title: {
     fontSize: 24,
@@ -155,5 +162,16 @@ const styles = StyleSheet.create({
   text1: {
     textAlign: "center",
     color: "blue"
+  },
+  logo: {
+    width: 250,
+    height: 250,
+  },
+  container2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: -115,
+    marginTop: -115,
   }
 });
