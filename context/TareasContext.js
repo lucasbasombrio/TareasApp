@@ -8,6 +8,7 @@ export const TareaProvider = ({ children }) => {
     const { userId } = useContext(AuthContext);
     const [tareas, setTareas] = useState([]);
     const [tareasActivas, setTareasActivas] = useState([]);
+    const [tareasCompletadas, setTareasCompletadas] = useState([]);
 
     const fetchTareas = async () => {
         try {
@@ -51,6 +52,8 @@ export const TareaProvider = ({ children }) => {
         }
     };
 
+    
+
     const devolverTareasActivas = async () => {
         try {
             const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea');
@@ -66,6 +69,21 @@ export const TareaProvider = ({ children }) => {
             return [];
         }
     };
+
+    const devolverTareasCompletadas = async () => {
+    try {
+        const respuesta = await fetch('https://6657b1355c361705264597cb.mockapi.io/Tarea');
+        if (!respuesta.ok) {
+            throw new Error('Error al obtener las tareas');
+        }
+        const tareas = await respuesta.json();
+        const tareasFiltradas = tareas.filter(item => item.idUsuario === userId && !item.estaActiva);
+        return tareasFiltradas;
+    } catch (error) {
+        console.error('Error al obtener las tareas completadas: ', error);
+        return [];
+    }
+};
 
     const completarTarea = async (tareaId) => {
         try {

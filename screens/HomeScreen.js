@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {  ImageBackground, StyleSheet, Text, TextInput, View, Button, FlatList } from 'react-native';
+import {  ImageBackground, StyleSheet, Text, TextInput, View, Button, Alert, FlatList } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import { TareasContext } from '../context/TareasContext';
@@ -33,12 +33,23 @@ export const HomeScreen = () => {
     logout();
   };
 
-   const eliminarTarea = async(tareaId) => {
-    await completarTarea(tareaId)
-const tareasActualizadas = await devolverTareasActivas(); 
-    setTareas(tareasActualizadas);
-    setNombreTarea("");
-  };  
+const eliminarTarea = async (tareaId) => {
+  Alert.alert(
+    'Confirmar',
+    '¿Estás seguro de que quieres completar esta tarea?',
+    [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Sí', onPress: async () => {
+          await completarTarea(tareaId);
+          const tareasActualizadas = await devolverTareasActivas(); 
+          setTareas(tareasActualizadas);
+          setNombreTarea("");
+        }
+      },
+    ],
+    { cancelable: true }
+  );
+};
 
   const handleSubmit = async () => { //cambie el handleSubmit, async
     const nuevaTarea = {
